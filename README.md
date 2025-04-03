@@ -17,7 +17,7 @@ The Image Gallery Lightbox is a web component that enhances the user experience 
 │
 ├── index.html       # The main HTML file
 ├── style.css        # The CSS file for styling
-└── lightbox.js      # The JavaScript file for functionality
+└── index.js      # The JavaScript file for functionality
 ```
 
 ![alt text](image.png)![alt text](<image 1.png>)
