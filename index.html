@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task-1</title>
+    <title>task-3</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-...some-sha512-hash..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <h1>To-Do List</h1>
-        <div class="input-container">
-            <input type="text" class="task-input" placeholder="Enter a new task">
-            <button class="add-button" onclick="addTask()">Add Task</button>
-        </div>
-        <ul class="task-list" id="taskList"></ul>
+    <h1>Image Gallery Lightbox</h1>
+    <div class="gallery" id="gallery"></div>
+
+    <div class="lightbox" id="lightbox">
+        <button class="close-btn" onclick="closeLightbox()" aria-label="Close Lightbox">×</button>
+        <img class="lightbox-img" id="lightboxImg">
     </div>
-    <script src="index.js"></script>
+
+    <script src="index.js"> </script>
 </body>
 </html>

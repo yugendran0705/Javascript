@@ -1,87 +1,54 @@
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+const images = [
+    'https://picsum.photos/800/600?random=1',
+    'https://picsum.photos/800/600?random=2',
+    'https://picsum.photos/800/600?random=3',
+    'https://picsum.photos/800/600?random=4',
+    'https://picsum.photos/800/600?random=5',
+    'https://picsum.photos/800/600?random=6'
+];
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderTasks();
+const gallery = document.getElementById('gallery');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+
+function createGallery() {
+    images.forEach((src, index) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = `Image ${index + 1}`;
+        img.className = 'thumbnail';
+        img.addEventListener('click', () => openLightbox(src));
+        gallery.appendChild(img);
+    });
+}
+
+
+function openLightbox(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden'; 
+}
+
+
+function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+
+createGallery();
+
+
+lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+        closeLightbox();
+    }
 });
 
-function addTask() {
-    const input = document.querySelector('.task-input');
-    const taskText = input.value.trim();
 
-    if (taskText) {
-        const task = {
-            id: Date.now(),
-            text: taskText,
-            completed: false
-        };
-        
-        tasks.push(task);
-        saveTasks();
-        renderTasks();
-        input.value = '';
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        closeLightbox();
     }
-}
-
-function toggleTask(id) {
-    tasks = tasks.map(task => {
-        if (task.id === id) {
-            return { ...task, completed: !task.completed };
-        }
-        return task;
-    });
-    saveTasks();
-    renderTasks();
-}
-
-function deleteTask(id) {
-    tasks = tasks.filter(task => task.id !== id);
-    saveTasks();
-    renderTasks();
-}
-
-function saveTasks() {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-function renderTasks() {
-    const taskList = document.getElementById('taskList');
-    taskList.innerHTML = '';
-
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.className = 'task-item';
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = task.completed;
-        checkbox.addEventListener('change', () => toggleTask(task.id));
-
-        const span = document.createElement('span');
-        span.textContent = task.text;
-        if (task.completed) span.className = 'completed';
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
-
-        const deleteIcon = document.createElement('i');
-        deleteIcon.className = 'fas fa-trash'; // Assuming you're using Font Awesome for icons
-
-        deleteBtn.appendChild(deleteIcon);
-        deleteBtn.addEventListener('click', () => deleteTask(task.id));
-
-        li.appendChild(checkbox);
-        li.appendChild(span);
-        li.appendChild(deleteBtn);
-        taskList.appendChild(li);
-    });
-}
-
-
-const addTaskInput = document.querySelector('.task-input');
-if (addTaskInput) {
-    addTaskInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            addTask();
-        }
-    });
-}
+});
