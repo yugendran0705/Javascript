@@ -1,23 +1,14 @@
-# Javascript
+# Calculator Module
 
-## To-Do App Documentation
+The Calculator Module provides basic arithmetic operations to perform calculations efficiently.
 
-### Overview
-The To-Do App is a simple web application that allows users to manage their tasks efficiently. It is built using HTML, CSS, and JavaScript.
+## Functions
 
-### Features
-- Add new tasks to the list.
-- Mark tasks as completed.
-- Delete tasks from the list.
-- Responsive design for various screen sizes.
+- **`add(a, b)`**: Returns the sum of two numbers.
+- **`subtract(a, b)`**: Returns the difference between two numbers.
+- **`multiply(a, b)`**: Returns the product of two numbers.
+- **`divide(a, b)`**: Returns the quotient of two numbers. Raises a `ZeroDivisionError` if the divisor is zero.
 
-### File Structure
-```
-/to-do-app
-│
-├── index.html   # The main HTML file
-├── style.css    # The CSS file for styling
-└── script.js    # The JavaScript file for functionality
-```
+---
 
-![alt text](image.png)
+![alt text](image-1.png)
