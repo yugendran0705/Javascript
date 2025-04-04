@@ -1,115 +1,94 @@
-const weatherInfo = document.getElementById('weatherInfo');
-const errorMessage = document.getElementById('errorMessage');
-
-const weatherCodes = {
-    1: 'Mainly clear',
-    2: 'Partly cloudy',
-    3: 'Overcast',
-    45: 'Fog',
-    51: 'Light drizzle',
-    61: 'Light rain',
-    63: 'Moderate rain',
-    65: 'Heavy rain',
-    71: 'Light snow',
-    73: 'Moderate snow',
-    75: 'Heavy snow'
-};
-
-async function getWeather() {
-    const cityInput = document.getElementById('cityInput');
-    const city = cityInput.value.trim();
-
-    if (!city) {
-        showError('Please enter a city name');
-        return;
+const quizData = [
+    {
+        question: "What is 2 + 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+        explanation: "Basic arithmetic: 2 + 2 equals 4."
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Venus", "Mars", "Jupiter", "Saturn"],
+        answer: "Mars",
+        explanation: "Mars is called the Red Planet due to its reddish appearance caused by iron oxide (rust) on its surface."
+    },
+    {
+        question: "Who is the author of Vagabond?",
+        options: ["Eiichiro Oda", "Junji Ito", "Takehiko Inoue", "Kentaro Miura"],
+        answer: "Takehiko Inoue",
+        explanation: "Takehiko Inoue is the author of Vagabond."
     }
+];
 
-    try {
-        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
-        const geoResponse = await fetch(geoUrl);
-        if (!geoResponse.ok) {
-            throw new Error('City not found');
-        }
+let currentQuestion = 0;
+let score = 0;
 
-        const geoData = await geoResponse.json();
-        console.log(geoData);
-        if (!geoData.results || geoData.results.length === 0) {
-            throw new Error('City not found');
-        }
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const nextBtn = document.getElementById('nextBtn');
+const resultEl = document.getElementById('result');
 
-        const { latitude, longitude, name, country } = geoData.results[0];
+function loadQuestion() {
+    const currentQuiz = quizData[currentQuestion];
+    questionEl.textContent = currentQuiz.question;
+    optionsEl.innerHTML = '';
 
-        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code`;
-        const weatherResponse = await fetch(weatherUrl);
-        if (!weatherResponse.ok) {
-            throw new Error('Failed to fetch weather data');
-        }
+    currentQuiz.options.forEach(option => {
+        const li = document.createElement('li');
+        li.textContent = option;
+        li.addEventListener('click', () => selectAnswer(option));
+        optionsEl.appendChild(li);
+    });
 
-        const weatherData = await weatherResponse.json();
-        console.log(weatherData);
-        displayWeather(name, country, weatherData.current);
-        hideError();
-        cityInput.value = '';
-    } catch (error) {
-        showError(error.message);
-        hideWeather();
-    }
+    nextBtn.style.display = 'none';
+    resultEl.style.display = 'none';
 }
 
-async function getCurrentLocationWeather() {
-    let latitude, longitude;
-    navigator.geolocation.getCurrentPosition(async (position) => {
-        console.log(position.coords.latitude, position.coords.longitude);
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
-        try {
-            const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code`;
-            const weatherResponse = await fetch(weatherUrl);
-            if (!weatherResponse.ok) {
-                throw new Error('Failed to fetch weather data');
-            }
+function selectAnswer(selected) {
+    const currentQuiz = quizData[currentQuestion];
+    const isCorrect = selected === currentQuiz.answer;
 
-            const weatherData = await weatherResponse.json();
-            //console.log(weatherData);
-            displayWeather("Current Location", '', weatherData.current);
-            hideError();
-            cityInput.value = '';
-        } catch (error) {
-            showError(error.message);
-            hideWeather();
+    if (isCorrect) {
+        score++;
+    }
+
+    optionsEl.querySelectorAll('li').forEach(li => {
+        li.style.pointerEvents = 'none';
+        if (li.textContent === currentQuiz.answer) {
+            li.style.background = '#90EE90'; 
+        } else if (li.textContent === selected && !isCorrect) {
+            li.style.background = '#FFB6C1'; 
         }
     });
+
+    nextBtn.style.display = 'block';
 }
 
-function displayWeather(cityName, country, weatherData) {
-    const cityDisplay = document.getElementById('cityName');
-    const temperature = document.getElementById('temperature');
-    const humidity = document.getElementById('humidity');
-    const description = document.getElementById('description');
+function nextQuestion() {
+    currentQuestion++;
 
-    cityDisplay.textContent = `${cityName}, ${country}`;
-    temperature.textContent = `Temperature: ${weatherData.temperature_2m}°C`;
-    humidity.textContent = `Humidity: ${weatherData.relative_humidity_2m}%`;
-    description.textContent = `Conditions: ${weatherCodes[weatherData.weather_code] || 'Unknown'}`;
-
-    weatherInfo.classList.add('active');
-}
-
-function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.classList.add('active');
-}
-
-function hideError() {
-    errorMessage.classList.remove('active');
-}
-
-function hideWeather() {
-    weatherInfo.classList.remove('active');
-}
-
-document.getElementById('cityInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        getWeather();
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        showResult();
     }
-});
+}
+
+function showResult() {
+    questionEl.style.display = 'none';
+    optionsEl.style.display = 'none';
+    nextBtn.style.display = 'none';
+    resultEl.style.display = 'block';
+
+    resultEl.innerHTML = `
+        <h2>Quiz Complete!</h2>
+        <p>Your score: ${score} out of ${quizData.length}</p>
+        <h3>Review:</h3>
+        ${quizData.map((q, i) => `
+            <p>${i + 1}. ${q.question}<br>
+            Answer: ${q.answer}<br>
+            ${q.explanation}</p>
+        `).join('')}
+    `;
+}
+
+loadQuestion(); 
