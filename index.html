@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Quiz</title>
+    <title>Drag and Drop List</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Simple Quiz</h1>
-        <div id="question"></div>
-        <ul class="options" id="options"></ul>
-        <button id="nextBtn" onclick="nextQuestion()">Next</button>
-        <div id="result"></div>
-    </div>
+    <h1>Reorderable List</h1>
+    <ul class="list" id="draggableList">
+        <li class="list-item" draggable="true">Item 1</li>
+        <li class="list-item" draggable="true">Item 2</li>
+        <li class="list-item" draggable="true">Item 3</li>
+        <li class="list-item" draggable="true">Item 4</li>
+        <li class="list-item" draggable="true">Item 5</li>
+    </ul>
 
     <script src="index.js"></script>
 </body>

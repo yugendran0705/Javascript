@@ -1,94 +1,63 @@
-const quizData = [
-    {
-        question: "What is 2 + 2?",
-        options: ["3", "4", "5", "6"],
-        answer: "4",
-        explanation: "Basic arithmetic: 2 + 2 equals 4."
-    },
-    {
-        question: "Which planet is known as the Red Planet?",
-        options: ["Venus", "Mars", "Jupiter", "Saturn"],
-        answer: "Mars",
-        explanation: "Mars is called the Red Planet due to its reddish appearance caused by iron oxide (rust) on its surface."
-    },
-    {
-        question: "Who is the author of Vagabond?",
-        options: ["Eiichiro Oda", "Junji Ito", "Takehiko Inoue", "Kentaro Miura"],
-        answer: "Takehiko Inoue",
-        explanation: "Takehiko Inoue is the author of Vagabond."
-    }
-];
+const list = document.getElementById('draggableList');
+let draggedItem = null;
 
-let currentQuestion = 0;
-let score = 0;
 
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options');
-const nextBtn = document.getElementById('nextBtn');
-const resultEl = document.getElementById('result');
+const items = document.querySelectorAll('.list-item');
+items.forEach(item => {
+    item.addEventListener('dragstart', handleDragStart);
+    item.addEventListener('dragend', handleDragEnd);
+    item.addEventListener('dragover', handleDragOver);
+    item.addEventListener('dragenter', handleDragEnter);
+    item.addEventListener('dragleave', handleDragLeave);
+    item.addEventListener('drop', handleDrop);
+});
 
-function loadQuestion() {
-    const currentQuiz = quizData[currentQuestion];
-    questionEl.textContent = currentQuiz.question;
-    optionsEl.innerHTML = '';
-
-    currentQuiz.options.forEach(option => {
-        const li = document.createElement('li');
-        li.textContent = option;
-        li.addEventListener('click', () => selectAnswer(option));
-        optionsEl.appendChild(li);
-    });
-
-    nextBtn.style.display = 'none';
-    resultEl.style.display = 'none';
+function handleDragStart(e) {
+    console.log('Drag started');
+    draggedItem = this;
+    setTimeout(() => {
+        this.classList.add('dragging');
+    }, 0);
 }
 
-function selectAnswer(selected) {
-    const currentQuiz = quizData[currentQuestion];
-    const isCorrect = selected === currentQuiz.answer;
+function handleDragEnd() {
+    console.log('Drag ended');
+    this.classList.remove('dragging');
+    draggedItem = null;
+    items.forEach(item => item.classList.remove('over'));
+}
 
-    if (isCorrect) {
-        score++;
+function handleDragOver(e) {
+    console.log('Drag over');
+    e.preventDefault();
+}
+
+function handleDragEnter(e) {
+    console.log('Drag enter');
+    e.preventDefault();
+    if (this !== draggedItem) {
+        this.classList.add('over');
     }
+}
 
-    optionsEl.querySelectorAll('li').forEach(li => {
-        li.style.pointerEvents = 'none';
-        if (li.textContent === currentQuiz.answer) {
-            li.style.background = '#90EE90'; 
-        } else if (li.textContent === selected && !isCorrect) {
-            li.style.background = '#FFB6C1'; 
+function handleDragLeave() {
+    console.log('Drag leave');
+    this.classList.remove('over');
+}
+
+function handleDrop(e) {
+    console.log('Drop');
+    e.preventDefault();
+    if (this !== draggedItem) {
+        const allItems = [...document.querySelectorAll('.list-item')];
+        const draggedIndex = allItems.indexOf(draggedItem);
+        const dropIndex = allItems.indexOf(this);
+
+        if (draggedIndex < dropIndex) {
+            this.parentNode.insertBefore(draggedItem, this.nextSibling);
+        } else {
+            this.parentNode.insertBefore(draggedItem, this);
         }
-    });
-
-    nextBtn.style.display = 'block';
-}
-
-function nextQuestion() {
-    currentQuestion++;
-
-    if (currentQuestion < quizData.length) {
-        loadQuestion();
-    } else {
-        showResult();
     }
+    this.classList.remove('over');
 }
-
-function showResult() {
-    questionEl.style.display = 'none';
-    optionsEl.style.display = 'none';
-    nextBtn.style.display = 'none';
-    resultEl.style.display = 'block';
-
-    resultEl.innerHTML = `
-        <h2>Quiz Complete!</h2>
-        <p>Your score: ${score} out of ${quizData.length}</p>
-        <h3>Review:</h3>
-        ${quizData.map((q, i) => `
-            <p>${i + 1}. ${q.question}<br>
-            Answer: ${q.answer}<br>
-            ${q.explanation}</p>
-        `).join('')}
-    `;
-}
-
-loadQuestion(); 
