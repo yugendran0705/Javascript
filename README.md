@@ -1,13 +1,10 @@
 # Javascript
 
-# Single Page Application
+# Infinite Scrolling Content Loader
 
-Single Page Applications (SPAs) are web applications that load a single HTML page and dynamically update the content as the user interacts with the app. Using JavaScript, SPAs manage the routing and rendering of views on the client side, eliminating the need for full-page reloads.
+Create a web page that loads additional content as the user scrolls toward the bottom.
+---
 
-![alt text](image.png)
+![alt text](image.png) 
 ---
 ![alt text](<image 1.png>)
----
-![alt text](<image 2.png>) 
----
-![alt text](<image 3.png>)

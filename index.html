@@ -3,45 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPA with Hash Routing</title>
+    <title>Infinite Anime Scroll</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="nav">
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#products">Products</a>
-        <a href="#contact">Contact</a>
-    </div>
-
-    <div class="content">
-        <div id="home" class="page">
-            <h1>Home</h1>
-            <p>Welcome to our website! This is the home page of our SPA.</p>
-            <p>Click the navigation links above to explore different sections.</p>
-        </div>
-
-        <div id="about" class="page">
-            <h1>About Us</h1>
-            <p>We are a company dedicated to building awesome web applications.</p>
-            <p>This SPA demonstrates simple hash-based routing.</p>
-        </div>
-
-        <div id="products" class="page">
-            <h1>Products</h1>
-            <ul>
-                <li>Product 1 - $19.99</li>
-                <li>Product 2 - $29.99</li>
-                <li>Product 3 - $39.99</li>
-            </ul>
-        </div>
-
-        <div id="contact" class="page">
-            <h1>Contact</h1>
-            <p>Email: example@email.com</p>
-            <p>Phone: 123456789</p>
-            <p>Address: Thanjavur, Tamil Nadu, India</p>
-        </div>
+    <div class="content" id="content">
+        <h1>Anime List</h1>
+        <div id="animeList"></div>
+        <div class="loading" id="loading">Loading...</div>
     </div>
 
     <script src="index.js"></script>
