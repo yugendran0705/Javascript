@@ -1,54 +1,35 @@
-const chatWindow = document.getElementById('chatWindow');
-const messageInput = document.getElementById('messageInput');
+const routes = {
+    'home': 'home',
+    'about': 'about',
+    'products': 'products',
+    'contact': 'contact'
+};
 
+const pages = document.querySelectorAll('.page');
 
-const botResponses = [
-    "Hey, that's cool!",
-    "Tell me more!",
-    "Interesting...",
-    "Got it!",
-    "Nice one!"
-];
+function navigate() {
+    
+    const hash = window.location.hash.slice(1) || 'home';
+    const pageId = routes[hash] || 'home'; 
 
+    
+    pages.forEach(page => {
+        page.classList.remove('active');
+        if (page.id === pageId) {
+            page.classList.add('active');
+        }
+    });
 
-function addMessage(text, isSent) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.classList.add(isSent ? 'sent' : 'received');
-
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    messageDiv.innerHTML = `
-                <div>${text}</div>
-                <div class="timestamp">${time}</div>
-            `;
-
-    chatWindow.appendChild(messageDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+    
+    document.title = `SPA - ${pageId.charAt(0).toUpperCase() + pageId.slice(1)}`;
 }
 
+navigate();
 
-function sendMessage() {
-    const text = messageInput.value.trim();
-    if (text) {
-        addMessage(text, true);
-        messageInput.value = '';
-        simulateBotResponse();
-    }
+window.addEventListener('hashchange', navigate);
+
+window.addEventListener('popstate', navigate);
+
+if (!window.location.hash) {
+    window.location.hash = '#home';
 }
-
-
-function simulateBotResponse() {
-    setTimeout(() => {
-        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
-        addMessage(randomResponse, false);
-    }, 1000);
-}
-
-
-messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
-});
-
-addMessage("Hello! How can I help you today?", false);
