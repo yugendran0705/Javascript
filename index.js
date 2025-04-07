@@ -1,63 +1,54 @@
-const list = document.getElementById('draggableList');
-let draggedItem = null;
+const chatWindow = document.getElementById('chatWindow');
+const messageInput = document.getElementById('messageInput');
 
 
-const items = document.querySelectorAll('.list-item');
-items.forEach(item => {
-    item.addEventListener('dragstart', handleDragStart);
-    item.addEventListener('dragend', handleDragEnd);
-    item.addEventListener('dragover', handleDragOver);
-    item.addEventListener('dragenter', handleDragEnter);
-    item.addEventListener('dragleave', handleDragLeave);
-    item.addEventListener('drop', handleDrop);
+const botResponses = [
+    "Hey, that's cool!",
+    "Tell me more!",
+    "Interesting...",
+    "Got it!",
+    "Nice one!"
+];
+
+
+function addMessage(text, isSent) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.classList.add(isSent ? 'sent' : 'received');
+
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    messageDiv.innerHTML = `
+                <div>${text}</div>
+                <div class="timestamp">${time}</div>
+            `;
+
+    chatWindow.appendChild(messageDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+
+function sendMessage() {
+    const text = messageInput.value.trim();
+    if (text) {
+        addMessage(text, true);
+        messageInput.value = '';
+        simulateBotResponse();
+    }
+}
+
+
+function simulateBotResponse() {
+    setTimeout(() => {
+        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+        addMessage(randomResponse, false);
+    }, 1000);
+}
+
+
+messageInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
 });
 
-function handleDragStart(e) {
-    console.log('Drag started');
-    draggedItem = this;
-    setTimeout(() => {
-        this.classList.add('dragging');
-    }, 0);
-}
-
-function handleDragEnd() {
-    console.log('Drag ended');
-    this.classList.remove('dragging');
-    draggedItem = null;
-    items.forEach(item => item.classList.remove('over'));
-}
-
-function handleDragOver(e) {
-    console.log('Drag over');
-    e.preventDefault();
-}
-
-function handleDragEnter(e) {
-    console.log('Drag enter');
-    e.preventDefault();
-    if (this !== draggedItem) {
-        this.classList.add('over');
-    }
-}
-
-function handleDragLeave() {
-    console.log('Drag leave');
-    this.classList.remove('over');
-}
-
-function handleDrop(e) {
-    console.log('Drop');
-    e.preventDefault();
-    if (this !== draggedItem) {
-        const allItems = [...document.querySelectorAll('.list-item')];
-        const draggedIndex = allItems.indexOf(draggedItem);
-        const dropIndex = allItems.indexOf(this);
-
-        if (draggedIndex < dropIndex) {
-            this.parentNode.insertBefore(draggedItem, this.nextSibling);
-        } else {
-            this.parentNode.insertBefore(draggedItem, this);
-        }
-    }
-    this.classList.remove('over');
-}
+addMessage("Hello! How can I help you today?", false);
