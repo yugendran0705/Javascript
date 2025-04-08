@@ -3,14 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Anime Scroll</title>
+    <title>Poster Store</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="content" id="content">
-        <h1>Anime List</h1>
-        <div id="animeList"></div>
+    <div class="container">
+        <div class="nav">
+            <a href="#shop">Shop</a>
+            <a href="#cart">Cart <span id="cartCount">(0)</span></a>
+        </div>
+
+        <!-- Loading... -->
         <div class="loading" id="loading">Loading...</div>
+
+        <!-- Shop Page -->
+        <div id="shop" class="page">
+            <h1>Poster Store</h1>
+            <div class="filters">
+                <input type="text" id="search" placeholder="Search posters...">
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="Action">Action</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Comedy">Comedy</option>
+                </select>
+            </div>
+            <div class="product-grid" id="productGrid"></div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cart" class="page">
+            <h1>Shopping Cart</h1>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="total" id="cartTotal"></div>
+        </div>
     </div>
 
     <script src="index.js"></script>
